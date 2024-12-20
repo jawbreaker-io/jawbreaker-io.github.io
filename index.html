@@ -19,6 +19,19 @@
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #e0e0e0, #cfcfcf);
             color: #333;
+            margin-top: 60px; /* Account for sticky header height */
+        }
+        .header {
+            position: sticky;
+            top: 0;
+            background: #007BFF;
+            color: white;
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            width: 100%;
+            z-index: 1000;
         }
         .logo {
             max-width: 200px;
@@ -43,12 +56,24 @@
             color: white;
         }
     </style>
+    <script>
+        function updateHeader() {
+            const now = new Date();
+            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+            document.querySelector('.header').textContent = `Raleigh, NC | Time: ${time}`;
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            updateHeader();
+            setInterval(updateHeader, 60000); // Update time every minute
+        });
+    </script>
 </head>
 <body>
+    <div class="header">Loading weather and time...</div>
     <img src="logo.png" alt="Jawbreaker Designs Logo" class="logo">
     <a href="https://jawbreaker.transistor.fm" target="_blank" class="link">Podcast</a>
     <a href="https://chat.jawbreaker.io" target="_blank" class="link">Chat</a>
     <a href="https://books.jawbreaker.io" target="_blank" class="link">Writebook</a>
 </body>
 </html>
-
