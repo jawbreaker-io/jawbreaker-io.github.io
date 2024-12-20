@@ -11,15 +11,10 @@
             box-sizing: border-box;
         }
         body {
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
             font-family: Arial, sans-serif;
             background: linear-gradient(135deg, #e0e0e0, #cfcfcf);
             color: #333;
-            margin-top: 60px; /* Account for sticky header height */
+            margin: 0;
         }
         .header {
             position: sticky;
@@ -30,8 +25,15 @@
             text-align: center;
             font-size: 18px;
             font-weight: bold;
-            width: 100%;
             z-index: 1000;
+        }
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            padding-top: 60px; /* To avoid overlap with sticky header */
         }
         .logo {
             max-width: 200px;
@@ -55,6 +57,15 @@
             background-color: #007BFF;
             color: white;
         }
+        .footer {
+            padding: 10px 20px;
+            text-align: center;
+            font-size: 14px;
+            color: #666;
+            background-color: #f4f4f9;
+            width: 100%;
+            border-top: 1px solid #ccc;
+        }
     </style>
     <script>
         function updateHeader() {
@@ -63,17 +74,26 @@
             document.querySelector('.header').textContent = `Raleigh, NC | Time: ${time}`;
         }
 
+        function updateFooterYear() {
+            const year = new Date().getFullYear();
+            document.querySelector('.footer').innerHTML = `&copy; ${year} Jawbreaker Designs. All rights reserved.`;
+        }
+
         document.addEventListener('DOMContentLoaded', () => {
             updateHeader();
+            updateFooterYear();
             setInterval(updateHeader, 60000); // Update time every minute
         });
     </script>
 </head>
 <body>
     <div class="header">Loading weather and time...</div>
-    <img src="logo.png" alt="Jawbreaker Designs Logo" class="logo">
-    <a href="https://jawbreaker.transistor.fm" target="_blank" class="link">Podcast</a>
-    <a href="https://chat.jawbreaker.io" target="_blank" class="link">Chat</a>
-    <a href="https://books.jawbreaker.io" target="_blank" class="link">Writebook</a>
+    <div class="container">
+        <img src="logo.png" alt="Jawbreaker Designs Logo" class="logo">
+        <a href="https://jawbreaker.transistor.fm" target="_blank" class="link">Podcast</a>
+        <a href="https://chat.jawbreaker.io" target="_blank" class="link">Chat</a>
+        <a href="https://books.jawbreaker.io" target="_blank" class="link">Writebook</a>
+    </div>
+    <div class="footer">&copy; 2024 Jawbreaker Designs. All rights reserved.</div>
 </body>
 </html>
