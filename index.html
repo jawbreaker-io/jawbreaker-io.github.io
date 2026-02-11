@@ -3,97 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jawbreaker.io</title>
+    <title>Action Is The Antidote</title>
     <style>
+        :root {
+            --bg-1: #090815;
+            --bg-2: #150f2f;
+            --bg-3: #06263a;
+            --glow: #36f0ff;
+            --hot: #ff4fd8;
+            --warm: #ffd166;
+            --text: #f7fbff;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
+
         body {
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #555555, #333333);
-            color: #333;
-            margin: 0;
-        }
-        .header {
-            position: sticky;
-            top: 0;
-            background: #0056b3;
-            color: white;
-            padding: 10px 20px;
-            text-align: center;
-            font-size: 18px;
-            font-weight: bold;
-            z-index: 1000;
-        }
-        .container {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
             min-height: 100vh;
-            padding-top: 60px; /* To avoid overlap with sticky header */
+            display: grid;
+            place-items: center;
+            overflow: hidden;
+            background: radial-gradient(circle at 15% 20%, #31115f 0%, transparent 35%),
+                        radial-gradient(circle at 80% 10%, #0f5f7a 0%, transparent 30%),
+                        radial-gradient(circle at 50% 80%, #66203f 0%, transparent 40%),
+                        linear-gradient(135deg, var(--bg-1), var(--bg-2), var(--bg-3));
+            font-family: "Inter", "Avenir Next", "Segoe UI", sans-serif;
+            color: var(--text);
+            animation: pulseBg 12s ease-in-out infinite alternate;
         }
-        .logo {
-            max-width: 200px;
-            margin-bottom: 20px;
-            border-radius: 15px;
+
+        .phrase {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.3em;
+            justify-content: center;
+            width: min(1100px, 90vw);
+            line-height: 1.15;
+            text-align: center;
+            font-weight: 800;
+            font-size: clamp(1.9rem, 4.8vw, 5.3rem);
+            letter-spacing: 0.02em;
+            text-transform: lowercase;
+            perspective: 900px;
+            text-shadow: 0 0 12px rgba(54, 240, 255, 0.25);
         }
-        .link {
-            text-decoration: none;
-            font-size: 18px;
-            color: #007BFF;
-            border: 2px solid #007BFF;
-            padding: 10px 20px;
-            border-radius: 5px;
-            margin-bottom: 20px;
-            transition: background-color 0.3s, color 0.3s;
+
+        .word {
+            position: relative;
             display: inline-block;
-            text-align: center;
-            width: 200px;
+            cursor: pointer;
+            transform-style: preserve-3d;
+            transition: transform 260ms cubic-bezier(.22,1,.36,1),
+                        color 200ms ease,
+                        filter 200ms ease,
+                        text-shadow 260ms ease;
+            isolation: isolate;
         }
-        .link:hover {
-            background-color: #007BFF;
-            color: white;
+
+        .word::before,
+        .word::after {
+            content: attr(data-word);
+            position: absolute;
+            inset: 0;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 220ms ease, transform 280ms ease;
         }
-        .footer {
-            position: sticky;
-            bottom: 0;
-            padding: 10px 20px;
-            text-align: center;
-            font-size: 14px;
-            color: #666;
-            background-color: #f4f4f9;
-            width: 100%;
-            border-top: 1px solid #ccc;
+
+        .word::before {
+            color: var(--glow);
+            filter: blur(2px);
+            transform: translate3d(-0.03em, -0.02em, -8px);
+            z-index: -2;
+        }
+
+        .word::after {
+            color: var(--hot);
+            filter: blur(0.5px);
+            transform: translate3d(0.04em, 0.03em, -12px);
+            z-index: -3;
+        }
+
+        .word:hover {
+            transform: translateY(-0.08em) rotateX(14deg) rotateY(-12deg) scale(1.06);
+            color: var(--warm);
+            filter: saturate(1.3);
+            text-shadow: 0 0 16px rgba(255, 79, 216, 0.6), 0 0 26px rgba(54, 240, 255, 0.4);
+            animation: jiggle 340ms ease;
+        }
+
+        .word:hover::before,
+        .word:hover::after {
+            opacity: 1;
+        }
+
+        .word:hover::before {
+            transform: translate3d(-0.09em, -0.07em, -10px);
+        }
+
+        .word:hover::after {
+            transform: translate3d(0.1em, 0.07em, -16px);
+        }
+
+        .spark {
+            position: fixed;
+            width: 9px;
+            aspect-ratio: 1;
+            border-radius: 50%;
+            background: radial-gradient(circle, #fff 0%, var(--glow) 45%, transparent 70%);
+            pointer-events: none;
+            opacity: 0;
+            animation: pop 700ms ease-out forwards;
+            mix-blend-mode: screen;
+            z-index: 50;
+        }
+
+        .hint {
+            position: fixed;
+            bottom: 24px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: clamp(0.75rem, 1.5vw, 0.95rem);
+            opacity: 0.72;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: #d6e7ff;
+        }
+
+        @keyframes pulseBg {
+            0% { filter: hue-rotate(0deg) saturate(1); }
+            100% { filter: hue-rotate(18deg) saturate(1.15); }
+        }
+
+        @keyframes jiggle {
+            0% { transform: translateY(0) rotateX(0) rotateY(0) scale(1); }
+            40% { transform: translateY(-0.1em) rotateX(16deg) rotateY(-10deg) scale(1.09); }
+            100% { transform: translateY(-0.08em) rotateX(14deg) rotateY(-12deg) scale(1.06); }
+        }
+
+        @keyframes pop {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(0.4);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--dx), var(--dy)) scale(1.8);
+            }
         }
     </style>
-    <script>
-        function updateHeader() {
-            const now = new Date();
-            const time = now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-            document.querySelector('.header').textContent = `Raleigh, NC | Time: ${time}`;
-        }
-
-        function updateFooterYear() {
-            const year = new Date().getFullYear();
-            document.querySelector('.footer').innerHTML = `&copy; ${year} Jawbreaker Designs. All rights reserved.`;
-        }
-
-        document.addEventListener('DOMContentLoaded', () => {
-            updateHeader();
-            updateFooterYear();
-            setInterval(updateHeader, 60000); // Update time every minute
-        });
-    </script>
 </head>
 <body>
-    <div class="header">Loading weather and time...</div>
-    <div class="container">
-        <img src="logo.png" alt="Jawbreaker Designs Logo" class="logo">
-        <a href="https://jawbreaker.transistor.fm" target="_blank" class="link">Podcast</a>
-    </div>
-    <div class="footer">&copy; 2025 Jawbreaker Designs. All rights reserved.</div>
+    <main class="phrase" aria-label="action is the antidote to fear and anxiety">
+        <span class="word" data-word="action">action</span>
+        <span class="word" data-word="is">is</span>
+        <span class="word" data-word="the">the</span>
+        <span class="word" data-word="antidote">antidote</span>
+        <span class="word" data-word="to">to</span>
+        <span class="word" data-word="fear">fear</span>
+        <span class="word" data-word="and">and</span>
+        <span class="word" data-word="anxiety">anxiety</span>
+    </main>
+    <p class="hint">hover over any word ✨</p>
+
+    <script>
+        const words = document.querySelectorAll('.word');
+
+        function spawnSparks(x, y) {
+            for (let i = 0; i < 7; i++) {
+                const spark = document.createElement('span');
+                spark.className = 'spark';
+                spark.style.left = `${x}px`;
+                spark.style.top = `${y}px`;
+                spark.style.setProperty('--dx', `${(Math.random() - 0.5) * 90}px`);
+                spark.style.setProperty('--dy', `${(Math.random() - 0.5) * 90}px`);
+                spark.style.animationDelay = `${Math.random() * 80}ms`;
+                document.body.appendChild(spark);
+                setTimeout(() => spark.remove(), 720);
+            }
+        }
+
+        words.forEach((word) => {
+            word.addEventListener('mouseenter', (event) => {
+                const rect = event.target.getBoundingClientRect();
+                spawnSparks(rect.left + rect.width / 2, rect.top + rect.height / 2);
+            });
+        });
+    </script>
 </body>
 </html>
